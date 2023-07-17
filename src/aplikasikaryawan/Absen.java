@@ -191,10 +191,8 @@ public class Absen extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Absen().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Absen().setVisible(true);
         });
     }
 
