@@ -5,16 +5,14 @@
 package aplikasikaryawan;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import java.awt.HeadlessException;
-import java.awt.event.KeyEvent;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-// libary database
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+// libary database
 /**
  *
  * @author User
@@ -29,9 +27,9 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
     
-    @SuppressWarnings("empty-statement")
-    public void getToLogin(){
-    }
+    // My Variable Global
+    Connection conn = null; PreparedStatement pst = null; ResultSet res = null;
+    // My Method
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,8 +46,9 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         userLogin = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        userLogin1 = new javax.swing.JTextField();
         buttonLogin = new javax.swing.JButton();
+        userPass = new javax.swing.JPasswordField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -68,32 +67,12 @@ public class Login extends javax.swing.JFrame {
         userLogin.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         userLogin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         userLogin.setToolTipText("");
-        userLogin.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                userLoginKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                userLoginKeyReleased(evt);
-            }
-        });
 
         jLabel5.setBackground(new java.awt.Color(51, 51, 51));
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("PASSWORD");
-
-        userLogin1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        userLogin1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        userLogin1.setToolTipText("");
-        userLogin1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                userLogin1KeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                userLogin1KeyReleased(evt);
-            }
-        });
 
         buttonLogin.setBackground(new java.awt.Color(0, 153, 102));
         buttonLogin.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -106,6 +85,17 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        userPass.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        userPass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel1.setForeground(new java.awt.Color(0, 102, 153));
+        jLabel1.setText("Lihat password ?");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -113,11 +103,12 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(userLogin)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-                    .addComponent(userLogin1)
-                    .addComponent(buttonLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(userPass))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -130,10 +121,12 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userLogin1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(userPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(buttonLogin)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -159,11 +152,11 @@ public class Login extends javax.swing.JFrame {
                         .addGap(104, 104, 104)
                         .addComponent(jLabel4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(10, Short.MAX_VALUE)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -181,37 +174,56 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void userLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userLoginKeyPressed
-        // TODO add your handling code here:
-        boolean validation = (evt.getKeyCode() == KeyEvent.VK_ENTER);
-        if (validation) {
-            buttonLogin.requestFocus();
-        }      
-    }//GEN-LAST:event_userLoginKeyPressed
-
     @SuppressWarnings("empty-statement")
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
         // TODO add your handling code here:
-        getToLogin();
-        
+        boolean validateUserLogin = userLogin.getText().equals("");
+        boolean validatePassLogin = String.valueOf(userPass.getPassword()).equals("");
+        if (validateUserLogin) {
+           JOptionPane.showMessageDialog(this, "Masukan nomor yang terdaftar !!!");
+           userLogin.requestFocus();
+        } else if (validatePassLogin) {
+           JOptionPane.showMessageDialog(this, "Masukan password yang terdaftar !!!");
+           userLogin.requestFocus();
+        } else {
+            try {
+                String SQLQuery = "SELECT divisi, COUNT(phone), COUNT(password) FROM tb_karyawan WHERE (`phone`=? and `password`=?);";
+                conn = (Connection) Connect.configDB();
+                pst = conn.prepareStatement(SQLQuery);
+                pst.setString(1, userLogin.getText().toLowerCase());
+                pst.setString(2, String.valueOf(userPass.getPassword()).toLowerCase());
+                res = pst.executeQuery();
+                
+                while(res.next()){
+                    if((res.getInt(2) == 0)||(res.getInt(3) == 0)){
+                        JOptionPane.showMessageDialog(this, "Data anda belum terdaftar!");
+                    } else {
+                        if(res.getString(1).equals("admin")){
+                            new Admin().setVisible(true);
+                            dispose();
+                        }else {
+                            new Karyawan().setVisible(true);
+                            dispose();
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } finally {
+                // Close the result set
+                if (res != null) {try {res.close();} catch (SQLException e) {}}
+                // Close the prepared statement
+                if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+                // Close the connection
+                if (conn != null) {try {conn.close();} catch (SQLException e) {}}
+            }
+        }
     }//GEN-LAST:event_buttonLoginActionPerformed
 
-    private void userLoginKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userLoginKeyReleased
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         // TODO add your handling code here:
-        if(userLogin.getText().length() > 10){
-            userLogin.setText(userLogin.getText().toLowerCase().substring(0, 10));
-        }else {
-            userLogin.setText(userLogin.getText().toLowerCase());
-        }
-    }//GEN-LAST:event_userLoginKeyReleased
-
-    private void userLogin1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userLogin1KeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userLogin1KeyPressed
-
-    private void userLogin1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userLogin1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userLogin1KeyReleased
+        JOptionPane.showMessageDialog(this, String.valueOf(userPass.getPassword()));
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -232,6 +244,7 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonLogin;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -239,6 +252,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField userLogin;
-    private javax.swing.JTextField userLogin1;
+    private javax.swing.JPasswordField userPass;
     // End of variables declaration//GEN-END:variables
 }

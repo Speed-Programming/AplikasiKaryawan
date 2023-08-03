@@ -19,7 +19,7 @@ public class Connect {
         try {
             String user="root"; //user database
             String pass=""; //password database
-            String db="201943501285_karyawan"; //name database
+            String db="201943501285_absensi"; //name database
             String url="jdbc:mysql://localhost:3306/"+db; //url database
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             mysqlconfig = DriverManager.getConnection(url, user, pass);   
