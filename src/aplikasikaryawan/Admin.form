@@ -438,7 +438,10 @@
                                       </Group>
                                       <Component id="jScrollPane12" alignment="0" max="32767" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="text_username2" pref="258" max="32767" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="text_username2" pref="258" max="32767" attributes="0"/>
+                                              <Component id="ds_cetak" max="32767" attributes="0"/>
+                                          </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Group type="102" alignment="0" attributes="0">
@@ -492,7 +495,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel58" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jPanel12" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -510,10 +513,14 @@
                                       <Component id="jPanel18" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="text_username2" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="text_username2" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="ds_cetak" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jScrollPane12" pref="315" max="32767" attributes="0"/>
+                          <EmptySpace pref="11" max="32767" attributes="0"/>
+                          <Component id="jScrollPane12" pref="314" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -978,6 +985,14 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="ds_cetak">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="CETAK"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ds_cetakActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -2141,7 +2156,9 @@
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="absensi_cetak" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -2175,23 +2192,23 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="absensi_cetak" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jPanel5" max="32767" attributes="0"/>
                                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="80" max="32767" attributes="0"/>
                               </Group>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace pref="36" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                              <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="jScrollPane2" alignment="0" pref="535" max="32767" attributes="0"/>
+                                          <Component id="jPanel6" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jScrollPane2" alignment="1" min="-2" pref="509" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -2344,11 +2361,11 @@
                                   <Group type="102" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="absen_lembur" alignment="1" pref="241" max="32767" attributes="0"/>
-                                          <Component id="absen_late" alignment="0" pref="241" max="32767" attributes="0"/>
-                                          <Component id="absen_confirm" alignment="0" pref="241" max="32767" attributes="0"/>
-                                          <Component id="absen_denda" alignment="0" pref="241" max="32767" attributes="0"/>
-                                          <Component id="jScrollPane13" alignment="0" pref="241" max="32767" attributes="0"/>
+                                          <Component id="absen_lembur" alignment="1" pref="242" max="32767" attributes="0"/>
+                                          <Component id="absen_late" alignment="0" pref="242" max="32767" attributes="0"/>
+                                          <Component id="absen_confirm" alignment="0" pref="242" max="32767" attributes="0"/>
+                                          <Component id="absen_denda" alignment="0" pref="242" max="32767" attributes="0"/>
+                                          <Component id="jScrollPane13" alignment="0" pref="242" max="32767" attributes="0"/>
                                           <Component id="absen_karyawan" alignment="1" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -2660,10 +2677,10 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="absen_date" pref="32" max="32767" attributes="0"/>
-                                          <Component id="absen_cari" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="absen_cari" alignment="0" pref="32" max="32767" attributes="0"/>
                                           <Component id="next_absen" alignment="0" max="32767" attributes="0"/>
                                           <Component id="prev_absen" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="absen_date" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="absen_status" min="-2" max="-2" attributes="0"/>
@@ -2673,18 +2690,6 @@
                             </DimensionLayout>
                           </Layout>
                           <SubComponents>
-                            <Component class="com.toedter.calendar.JDateChooser" name="absen_date">
-                              <Properties>
-                                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                  <Color blue="0" green="0" red="0" type="rgb"/>
-                                </Property>
-                                <Property name="dateFormatString" type="java.lang.String" value="MM/dd/yyyy"/>
-                                <Property name="focusCycleRoot" type="boolean" value="true"/>
-                                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                  <Font name="Segoe UI" size="16" style="1"/>
-                                </Property>
-                              </Properties>
-                            </Component>
                             <Component class="javax.swing.JButton" name="prev_absen">
                               <Properties>
                                 <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
@@ -2732,8 +2737,21 @@
                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="absen_cariActionPerformed"/>
                               </Events>
                             </Component>
+                            <Component class="com.toedter.calendar.JDateChooser" name="absen_date">
+                              <Properties>
+                                <Property name="dateFormatString" type="java.lang.String" value="MM/dd/yyyy"/>
+                              </Properties>
+                            </Component>
                           </SubComponents>
                         </Container>
+                        <Component class="javax.swing.JButton" name="absensi_cetak">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="CETAK"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="absensi_cetakActionPerformed"/>
+                          </Events>
+                        </Component>
                       </SubComponents>
                     </Container>
                   </SubComponents>
@@ -2799,7 +2817,10 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane5" min="-2" pref="250" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="gaji_cetak" pref="241" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane5" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -2810,7 +2831,12 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jPanel7" max="32767" attributes="0"/>
-                                      <Component id="jScrollPane5" max="32767" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          <Component id="gaji_cetak" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="jScrollPane5" min="-2" pref="502" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -2844,9 +2870,9 @@
                                                       <Component id="prev_gaji" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                       <Component id="next_gaji" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="gaji_date" min="-2" pref="147" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <EmptySpace max="-2" attributes="0"/>
+                                                      <Component id="gaji_date" min="-2" pref="159" max="-2" attributes="0"/>
+                                                      <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="gaji_cari" max="32767" attributes="0"/>
                                                   </Group>
                                               </Group>
@@ -2888,8 +2914,8 @@
                                               <Component id="prev_gaji" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                               <Component id="next_gaji" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="gaji_date" min="-2" pref="30" max="-2" attributes="0"/>
                                           <Component id="gaji_cari" min="-2" pref="30" max="-2" attributes="0"/>
+                                          <Component id="gaji_date" min="-2" pref="30" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Component id="jLabel89" min="-2" pref="28" max="-2" attributes="0"/>
@@ -3094,18 +3120,6 @@
                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="next_gajiActionPerformed"/>
                               </Events>
                             </Component>
-                            <Component class="com.toedter.calendar.JDateChooser" name="gaji_date">
-                              <Properties>
-                                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                  <Color blue="0" green="0" red="0" type="rgb"/>
-                                </Property>
-                                <Property name="dateFormatString" type="java.lang.String" value="MM/dd/yyyy"/>
-                                <Property name="focusCycleRoot" type="boolean" value="true"/>
-                                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                  <Font name="Segoe UI" size="16" style="1"/>
-                                </Property>
-                              </Properties>
-                            </Component>
                             <Component class="javax.swing.JButton" name="gaji_cari">
                               <Properties>
                                 <Property name="text" type="java.lang.String" value="CARI"/>
@@ -3134,6 +3148,11 @@
                                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="TOTAL UPAH"/>
+                              </Properties>
+                            </Component>
+                            <Component class="com.toedter.calendar.JDateChooser" name="gaji_date">
+                              <Properties>
+                                <Property name="dateFormatString" type="java.lang.String" value="MM/dd/yyyy"/>
                               </Properties>
                             </Component>
                           </SubComponents>
@@ -3207,6 +3226,14 @@
                             </Component>
                           </SubComponents>
                         </Container>
+                        <Component class="javax.swing.JButton" name="gaji_cetak">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="CETAK"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gaji_cetakActionPerformed"/>
+                          </Events>
+                        </Component>
                       </SubComponents>
                     </Container>
                   </SubComponents>
