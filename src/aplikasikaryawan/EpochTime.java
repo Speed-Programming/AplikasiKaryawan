@@ -81,6 +81,35 @@ public class EpochTime {
         return epochTime;
     }
     
+    public static long getMonthEpoch(Date date, int value){
+
+        // Membuat objek Calendar dan mengatur tanggal sesuai dengan epoch
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        // Mendapatkan awal bulan
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Long awalBulan = calendar.getTimeInMillis();
+
+        // Mendapatkan akhir bulan
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Long akhirBulan = calendar.getTimeInMillis();
+
+        if(value == 0){
+            return awalBulan;
+        }else if(value == 1){
+            return akhirBulan;
+        }
+        return 0;
+    }
+    
     public static String convertDateEpoch(JDateChooser Chooserdate) throws ParseException{
         
         Calendar calendar = Calendar.getInstance();
@@ -103,7 +132,11 @@ public class EpochTime {
         
         System.out.println(currentTime());
         
-        String tanggal = "08/04/2023";
+        String tanggal = "08/18/2023";
         System.out.println(getDateEpoch(tanggal));
+
+        Date date = new Date();
+        System.out.println(getMonthEpoch(date, 0));
+        System.out.println(getMonthEpoch(date, 1));
     }
 }

@@ -187,7 +187,7 @@ public class Login extends javax.swing.JFrame {
            userLogin.requestFocus();
         } else {
             try {
-                String SQLQuery = "SELECT divisi, COUNT(phone), COUNT(password) FROM tb_karyawan WHERE (`phone`=? and `password`=?);";
+                String SQLQuery = "SELECT nama, divisi, COUNT(phone), COUNT(password) FROM tb_karyawan WHERE (`phone`=? and `password`=?);";
                 conn = (Connection) Connect.configDB();
                 pst = conn.prepareStatement(SQLQuery);
                 pst.setString(1, userLogin.getText().toLowerCase());
@@ -195,13 +195,14 @@ public class Login extends javax.swing.JFrame {
                 res = pst.executeQuery();
                 
                 while(res.next()){
-                    if((res.getInt(2) == 0)||(res.getInt(3) == 0)){
+                    if((res.getInt(3) == 0)||(res.getInt(4) == 0)){
                         JOptionPane.showMessageDialog(this, "Data anda belum terdaftar!");
                     } else {
-                        if(res.getString(1).equals("admin")){
+                        if(res.getString(2).equals("admin")){
                             new Admin().setVisible(true);
                             dispose();
                         }else {
+                            myProfile.setUsername(res.getString(1));
                             new Karyawan().setVisible(true);
                             dispose();
                         }

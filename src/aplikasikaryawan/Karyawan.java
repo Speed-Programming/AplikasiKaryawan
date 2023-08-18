@@ -4,8 +4,12 @@
  */
 package aplikasikaryawan;
 
+import static aplikasikaryawan.EpochTime.convertDateEpoch;
+import static aplikasikaryawan.EpochTime.getDateEpoch;
+import static aplikasikaryawan.EpochTime.getOfDay;
+import static aplikasikaryawan.EpochTime.getWorkOfDay;
 import com.formdev.flatlaf.FlatDarkLaf;
-import java.awt.Color;
+import com.toedter.calendar.JDateChooser;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +18,9 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -33,12 +38,137 @@ public class Karyawan extends javax.swing.JFrame {
      */
     public Karyawan() {
         initComponents();
+        profile_user.setText(myProfile.getUser());
         absen_date.setDate(new Date());
         profile_date.setDate(new Date());
+        getProfile();
+        time();
+    }
+    
+    public void time(){
+        new Thread(){
+            @Override
+            public void run() {
+                while (true) {
+                    String tanggal = new SimpleDateFormat("EEEE, dd MMMM Y").format(new java.util.Date (EpochTime.currentTime()));
+                    String jam = new SimpleDateFormat("KK:mm:ss a").format(new java.util.Date (EpochTime.currentTime()));
+                    text_tanggal.setText(String.valueOf(tanggal));
+                    text_jam.setText(String.valueOf(jam));
+                }
+            }
+            
+        }.start();
     }
 
     public void getProfile(){
+        try {
+                String SQLQuery = "CALL GetProfile(?,?,?)";
+                con = (Connection) Connect.configDB();
+                pst = con.prepareStatement(SQLQuery);
+                pst.setString(1, profile_user.getText());
+                pst.setLong(2, EpochTime.getMonthEpoch(profile_date.getDate(), 0));
+                pst.setLong(3, EpochTime.getMonthEpoch(profile_date.getDate(), 1));
+                res = pst.executeQuery();
+                
+                while (res.next()) {                    
+                    profile_user.setText(res.getString(1));
+                    profile_pass.setText(res.getString(2));
+                    profile_jk.setSelectedItem(res.getString(3).toUpperCase());
+                    profile_ktp.setText(res.getString(4));
+                    profile_divisi.setText(res.getString(5));
+                    profile_jabatan.setText(res.getString(6));
+                    profile_phone.setText(res.getString(7));
+                    profile_pola.setText(res.getString(8));
+                    profile_bonus.setText(res.getString(9));
+                    profile_denda.setText(res.getString(10));
+                    profile_gajipokok.setText(res.getString(11));
+                    profile_gaji.setText(res.getString(12));
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                new Login().setVisible(true);
+            } finally {
+                // Close the result set
+                if (res != null) {try {res.close();} catch (SQLException e) {}}
+                // Close the prepared statement
+                if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+                // Close the connection
+                if (con != null) {try {con.close();} catch (SQLException e) {}}
+            }
+    }
+    
+    public void insertAbsen(String status){
+        try {
+            String SQLQuery = "INSERT INTO `tb_absen` (`karyawan`, `status`, `catatan`, `absen_in`, `absen_out`, `date`, `lembur`, `terlambat`, `confirm`, `denda`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            con = (Connection) Connect.configDB();
+            pst = con.prepareStatement(SQLQuery);
+            pst.setString(1, profile_user.getText().toLowerCase());
+            pst.setString(2, status);
+            pst.setString(3, absen_note.getText().toLowerCase());
+            pst.setLong(4, EpochTime.currentTime());
+            pst.setLong(5, EpochTime.getWorkOfDay("END"));
+            pst.setLong(6, EpochTime.getDateEpoch(EpochTime.convertDateEpoch(absen_date)));
+            pst.setInt(7, absen_lembur.getSelectedIndex());
+            pst.setInt(8, absen_late.getSelectedIndex());
+            pst.setInt(9, absen_confirm.getSelectedIndex());
+            pst.setInt(10, Integer.parseInt(absen_denda.getText()));
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Anda sudah berhasil absen, namun tunggu persetujuan admin.");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            JOptionPane.showMessageDialog(null, "Data absen hanya bisa 1 data perhari");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } catch (ParseException ex) {
+            Logger.getLogger(Karyawan.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Close the result set
+            if (res != null) {try {res.close();} catch (SQLException e) {}}
+            // Close the prepared statement
+            if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+            // Close the connection
+            if (con != null) {try {con.close();} catch (SQLException e) {}}
+        }
+    }
+    
+    public void getAbsen(String user, JDateChooser Chooserdate) throws ParseException{
+        String newDate = convertDateEpoch(Chooserdate);
+        String status = "", denda = "", note = "";
+        Integer confirm = 0, lembur = 0, late = 0;
         
+        try {
+            String SQLQuery = "CALL GetAbsenUser(?,?);";
+            con = (Connection) Connect.configDB();
+            pst = con.prepareStatement(SQLQuery);
+            pst.setString(1, profile_user.getText().toLowerCase());
+            pst.setLong(2, getDateEpoch(newDate));
+            res = pst.executeQuery();
+            
+            while(res.next()) { 
+                status = res.getString(1).toUpperCase();
+                confirm = res.getInt(2);
+                lembur = res.getInt(3);
+                late = res.getInt(4);
+                denda = res.getString(5);
+                note = res.getString(6).toLowerCase();
+            }
+            
+            absen_status.setSelectedItem(status);
+            absen_confirm.setSelectedIndex(confirm);
+            absen_lembur.setSelectedIndex(lembur);
+            absen_late.setSelectedIndex(late);
+            absen_denda.setText(denda);
+            absen_note.setText(note);
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            // Close the result set
+            if (res != null) {try {res.close();} catch (SQLException e) {}}
+            // Close the prepared statement
+            if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+            // Close the connection
+            if (con != null) {try {con.close();} catch (SQLException e) {}}
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,8 +233,10 @@ public class Karyawan extends javax.swing.JFrame {
         profile_update = new javax.swing.JButton();
         profile_date = new com.toedter.calendar.JDateChooser();
         profile_cek = new javax.swing.JButton();
+        profile_gajipokok = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         admin_button = new javax.swing.JPanel();
-        btn_absen = new javax.swing.JButton();
+        btn_hadir = new javax.swing.JButton();
         btn_keluar = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -160,6 +292,7 @@ public class Karyawan extends javax.swing.JFrame {
 
         absen_lembur.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         absen_lembur.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NO", "YES" }));
+        absen_lembur.setEnabled(false);
 
         jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel37.setForeground(new java.awt.Color(255, 255, 255));
@@ -291,6 +424,11 @@ public class Karyawan extends javax.swing.JFrame {
 
         profile_user.setEditable(false);
         profile_user.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        profile_user.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile_userActionPerformed(evt);
+            }
+        });
 
         profile_pass.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
@@ -344,21 +482,21 @@ public class Karyawan extends javax.swing.JFrame {
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel15.setText("BONUS");
+        jLabel15.setText("BONUS/DENDA");
 
         profile_bonus.setEditable(false);
         profile_bonus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel16.setText("DENDA");
+        jLabel16.setText("GAJI POKOK");
 
         profile_denda.setEditable(false);
         profile_denda.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel17.setText("GAJI");
+        jLabel17.setText("TOTAL GAJI");
 
         profile_gaji.setEditable(false);
         profile_gaji.setBackground(new java.awt.Color(51, 153, 0));
@@ -375,12 +513,35 @@ public class Karyawan extends javax.swing.JFrame {
         jLabel19.setText("Rp.");
 
         profile_delete.setText("DELETE");
+        profile_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile_deleteActionPerformed(evt);
+            }
+        });
 
         profile_update.setText("UPDATE");
+        profile_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile_updateActionPerformed(evt);
+            }
+        });
 
         profile_date.setDateFormatString("MM/dd/yyyy");
 
         profile_cek.setText("CEK DATA");
+        profile_cek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile_cekActionPerformed(evt);
+            }
+        });
+
+        profile_gajipokok.setEditable(false);
+        profile_gajipokok.setBackground(new java.awt.Color(51, 153, 0));
+        profile_gajipokok.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        profile_gajipokok.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Rp.");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -438,18 +599,24 @@ public class Karyawan extends javax.swing.JFrame {
                                     .addGap(18, 18, 18)
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel4Layout.createSequentialGroup()
                                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(profile_bonus, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
-                                .addComponent(profile_denda)
-                                .addComponent(profile_gaji)))))
+                                .addComponent(profile_gaji, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(profile_bonus)
+                                    .addGap(43, 43, 43)
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(profile_denda, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(profile_gajipokok, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -498,17 +665,20 @@ public class Karyawan extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(profile_bonus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
+                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(profile_denda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17)
-                    .addComponent(profile_gaji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(profile_gajipokok, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel17)
+                        .addComponent(profile_gaji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23))
         );
 
@@ -536,14 +706,14 @@ public class Karyawan extends javax.swing.JFrame {
         admin_button.setBackground(new java.awt.Color(204, 255, 204));
         admin_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        btn_absen.setBackground(new java.awt.Color(0, 102, 153));
-        btn_absen.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        btn_absen.setForeground(new java.awt.Color(0, 0, 0));
-        btn_absen.setText("HADIR");
-        btn_absen.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btn_absen.addActionListener(new java.awt.event.ActionListener() {
+        btn_hadir.setBackground(new java.awt.Color(0, 102, 153));
+        btn_hadir.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btn_hadir.setForeground(new java.awt.Color(0, 0, 0));
+        btn_hadir.setText("HADIR");
+        btn_hadir.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btn_hadir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_absenActionPerformed(evt);
+                btn_hadirActionPerformed(evt);
             }
         });
 
@@ -621,7 +791,7 @@ public class Karyawan extends javax.swing.JFrame {
                         .addGap(6, 6, 6))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, admin_buttonLayout.createSequentialGroup()
                         .addGroup(admin_buttonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btn_absen, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_hadir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, admin_buttonLayout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -642,7 +812,7 @@ public class Karyawan extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
                 .addGap(46, 46, 46)
-                .addComponent(btn_absen)
+                .addComponent(btn_hadir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_absen1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -692,9 +862,10 @@ public class Karyawan extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_absenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_absenActionPerformed
+    private void btn_hadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hadirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_absenActionPerformed
+        insertAbsen("hadir");
+    }//GEN-LAST:event_btn_hadirActionPerformed
 
     private void btn_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluarActionPerformed
         // TODO add your handling code here:
@@ -763,27 +934,117 @@ public class Karyawan extends javax.swing.JFrame {
     }//GEN-LAST:event_absen_statusActionPerformed
 
     private void absen_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_absen_cariActionPerformed
-        // TODO add your handling code here:
-        if (res != null) {
-            try {res.close();} catch (SQLException e) {}
-        } //getTableAbsen(String.valueOf(absen_status.getSelectedItem()).toLowerCase(), EpochTime.convertDateEpoch(absen_date));
-        // Close the prepared statement
-        if (pst != null) {try {pst.close();} catch (SQLException e) {}}
-        // Close the connection
-        if (con != null) {try {con.close();} catch (SQLException e) {}}
+            // TODO add your handling code here:
+            String user = profile_user.getText().toLowerCase();
+        try {
+            getAbsen(user, absen_date);
+        } catch (ParseException ex) {
+            Logger.getLogger(Karyawan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_absen_cariActionPerformed
 
     private void btn_absen1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_absen1ActionPerformed
         // TODO add your handling code here:
+        insertAbsen("izin");
     }//GEN-LAST:event_btn_absen1ActionPerformed
 
     private void btn_absen2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_absen2ActionPerformed
         // TODO add your handling code here:
+        insertAbsen("cuti");
     }//GEN-LAST:event_btn_absen2ActionPerformed
 
     private void profile_jkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_jkActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_profile_jkActionPerformed
+
+    private void profile_cekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_cekActionPerformed
+        // TODO add your handling code here:
+        getProfile();
+    }//GEN-LAST:event_profile_cekActionPerformed
+
+    private void profile_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_updateActionPerformed
+        // TODO add your handling code here:
+        int validation = JOptionPane.showConfirmDialog(null, "Anda yakin ingin update data?", "", JOptionPane.YES_NO_OPTION);
+        switch (validation) {
+            case JOptionPane.YES_OPTION :
+                try {
+                    String SQLQuery = "UPDATE `tb_karyawan` SET `password` = ?, `gender` = ?, `ktp` = ?, `jabatan` = ?, `phone` = ? WHERE `nama` = ?;";
+                    con = (Connection) Connect.configDB();
+                    pst = con.prepareStatement(SQLQuery);
+                    pst.setString(1, profile_pass.getText().toLowerCase());
+                    pst.setString(2, String.valueOf(profile_jk.getSelectedItem()).toLowerCase());
+                    pst.setString(3, profile_ktp.getText());
+                    pst.setString(4, profile_jabatan.getText());
+                    pst.setString(5, profile_phone.getText());
+                    pst.setString(6, profile_user.getText());
+                    pst.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Ubah data berhasil.");
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
+                } finally {
+                    // Close the result set
+                    if (res != null) {try {res.close();} catch (SQLException e) {}}
+                    // Close the prepared statement
+                    if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+                    // Close the connection
+                    if (con != null) {try {con.close();} catch (SQLException e) {}}
+                }
+            default:
+        }
+    }//GEN-LAST:event_profile_updateActionPerformed
+
+    private void profile_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_deleteActionPerformed
+        // TODO add your handling code here:
+        int validation = JOptionPane.showConfirmDialog(null, "Anda yakin ingin menghapus data?", "", JOptionPane.YES_NO_OPTION);
+        String value = profile_user.getText().toLowerCase();
+        switch (validation) {
+            case JOptionPane.YES_OPTION :
+                try {
+                    con = (Connection) Connect.configDB();
+
+                    // DELETE KARYAWN
+                    String SQLQuery = "DELETE FROM `tb_karyawan` WHERE `tb_karyawan`.`nama` = ?;";
+                    pst = con.prepareStatement(SQLQuery);
+                    pst.setString(1, value);
+                    pst.executeUpdate();
+
+                    // DELETE GAJI
+                    SQLQuery = "DELETE FROM `tb_gaji` WHERE `tb_gaji`.`karyawan` = ?;";
+                    pst = con.prepareStatement(SQLQuery);
+                    pst.setString(1, value);
+                    pst.executeUpdate();
+
+                    // DELETE POLA KERJA
+                    SQLQuery = "DELETE FROM `tb_pola_kerja` WHERE `tb_pola_kerja`.`nama` = ?;";
+                    pst = con.prepareStatement(SQLQuery);
+                    pst.setString(1, value);
+                    pst.executeUpdate();
+                    
+                    // DELETE ABSEN
+                    SQLQuery = "DELETE FROM `tb_absen` WHERE `tb_absen`.`karyawan` = ?;";
+                    pst = con.prepareStatement(SQLQuery);
+                    pst.setString(1, value);
+                    pst.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Hapus akun berhasil.");
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
+                } finally {
+                    // Close the result set
+                    if (res != null) {try {res.close();} catch (SQLException e) {}}
+                    // Close the prepared statement
+                    if (pst != null) {try {pst.close();} catch (SQLException e) {}}
+                    // Close the connection
+                    if (con != null) {try {con.close();} catch (SQLException e) {}}
+                }
+            default:
+        }
+    }//GEN-LAST:event_profile_deleteActionPerformed
+
+    private void profile_userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_userActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_profile_userActionPerformed
 
     /**
      * @param args the command line arguments
@@ -798,8 +1059,11 @@ public class Karyawan extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Karyawan().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Karyawan().setVisible(true);
+            }
         });
     }
 
@@ -815,9 +1079,9 @@ public class Karyawan extends javax.swing.JFrame {
     private javax.swing.JPanel absence;
     private javax.swing.JPanel absensi;
     private javax.swing.JPanel admin_button;
-    private javax.swing.JButton btn_absen;
     private javax.swing.JButton btn_absen1;
     private javax.swing.JButton btn_absen2;
+    private javax.swing.JButton btn_hadir;
     private javax.swing.JButton btn_keluar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -830,6 +1094,7 @@ public class Karyawan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel31;
@@ -857,6 +1122,7 @@ public class Karyawan extends javax.swing.JFrame {
     private javax.swing.JTextField profile_denda;
     private javax.swing.JTextField profile_divisi;
     private javax.swing.JTextField profile_gaji;
+    private javax.swing.JTextField profile_gajipokok;
     private javax.swing.JTextField profile_jabatan;
     private javax.swing.JComboBox<String> profile_jk;
     private javax.swing.JTextField profile_ktp;
