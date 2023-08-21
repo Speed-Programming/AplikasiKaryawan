@@ -427,7 +427,6 @@ public class Admin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField3 = new javax.swing.JTextField();
         admin = new javax.swing.JPanel();
         admin_button = new javax.swing.JPanel();
         btn_pegawai = new javax.swing.JButton();
@@ -510,6 +509,8 @@ public class Admin extends javax.swing.JFrame {
         dk_read = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         dk_table = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        btn_cetak_user = new javax.swing.JButton();
         divisi = new javax.swing.JPanel();
         jLabel52 = new javax.swing.JLabel();
         div_name = new javax.swing.JTextField();
@@ -1272,10 +1273,7 @@ public class Admin extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         jPanel4.setBackground(new Color(1.0f, 1.0f, 1.0f, 0f));
@@ -1379,17 +1377,29 @@ public class Admin extends javax.swing.JFrame {
             dk_table.getColumnModel().getColumn(7).setPreferredWidth(235);
         }
 
+        jButton2.setText("jButton2");
+
+        btn_cetak_user.setText("CETAK");
+        btn_cetak_user.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cetak_userActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout data_karyawanLayout = new javax.swing.GroupLayout(data_karyawan);
         data_karyawan.setLayout(data_karyawanLayout);
         data_karyawanLayout.setHorizontalGroup(
             data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 687, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, data_karyawanLayout.createSequentialGroup()
+                .addContainerGap(444, Short.MAX_VALUE)
+                .addComponent(btn_cetak_user, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(data_karyawanLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(data_karyawanLayout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addGap(0, 6, Short.MAX_VALUE)
                             .addComponent(jLabel2)
                             .addGap(305, 305, 305)
                             .addComponent(jLabel3)
@@ -1402,13 +1412,22 @@ public class Admin extends javax.swing.JFrame {
                             .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE)))
                     .addContainerGap()))
+            .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(data_karyawanLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jButton2)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         data_karyawanLayout.setVerticalGroup(
             data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 553, Short.MAX_VALUE)
+            .addGroup(data_karyawanLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_cetak_user)
+                .addContainerGap(528, Short.MAX_VALUE))
             .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(data_karyawanLayout.createSequentialGroup()
                     .addContainerGap()
@@ -1417,7 +1436,9 @@ public class Admin extends javax.swing.JFrame {
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE))
+                        .addGroup(data_karyawanLayout.createSequentialGroup()
+                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel3)
@@ -1425,6 +1446,11 @@ public class Admin extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addComponent(jLabel19))
                     .addContainerGap()))
+            .addGroup(data_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(data_karyawanLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jButton2)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("DATA KARYAWAN", data_karyawan);
@@ -1542,7 +1568,7 @@ public class Admin extends javax.swing.JFrame {
                 .addComponent(jLabel53)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(div_gaji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
                 .addGroup(divisiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(div_create, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(div_read, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1751,7 +1777,7 @@ public class Admin extends javax.swing.JFrame {
             page_karyawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(page_karyawanLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2098,10 +2124,10 @@ public class Admin extends javax.swing.JFrame {
                 .addGroup(absensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
             .addGroup(absensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(absensiLayout.createSequentialGroup()
-                    .addContainerGap(36, Short.MAX_VALUE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(absensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -2129,7 +2155,7 @@ public class Admin extends javax.swing.JFrame {
             page_absensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(page_absensiLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -3370,7 +3396,7 @@ public class Admin extends javax.swing.JFrame {
     private void ds_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ds_cetakActionPerformed
         try {
             // TODO add your handling code here:
-            new Cetak().generatePDF(dk_table, "HISTORY TOPUP HARIAN");
+            new Cetak().generatePDF(tbl_days, "HISTORY TOPUP HARIAN");
         } catch (IOException | DocumentException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -3395,6 +3421,15 @@ public class Admin extends javax.swing.JFrame {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_absensi_cetakActionPerformed
+
+    private void btn_cetak_userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetak_userActionPerformed
+        // TODO add your handling code here:
+        try {
+            new Cetak().generatePDF(dk_table, "USER KARYAWAN");
+        } catch (IOException | DocumentException ex) {
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btn_cetak_userActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3435,6 +3470,7 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JPanel admin_button;
     private javax.swing.JPanel admin_page;
     private javax.swing.JButton btn_absensi;
+    private javax.swing.JButton btn_cetak_user;
     private javax.swing.JButton btn_dasbor;
     private javax.swing.JButton btn_gaji;
     private javax.swing.JButton btn_keluar;
@@ -3485,6 +3521,7 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JTable gaji_table;
     private javax.swing.JLabel gaji_upah;
     private javax.swing.JButton gaji_update;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -3564,7 +3601,6 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JButton next_absen;
     private javax.swing.JButton next_gaji;
     private javax.swing.JPanel page_absensi;
